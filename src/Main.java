@@ -12,12 +12,12 @@ public class Main {
         taskManager.addTask(task1);
         taskManager.addTask(task2);
 
-        Epic epic1 = new Epic("Уборка дома", "Провести уборку дома", TaskStatus.NEW);
-        Subtask subtask1 = new Subtask("Постирать одежду", "Не забыть повесить на вешалку", TaskStatus.NEW, epic1);
-        Subtask subtask2 = new Subtask("Помыть пол", "Желательно сделать до обеда", TaskStatus.NEW, epic1);
+        Epic epic1 = new Epic("Уборка дома", "Провести уборку дома");
+        Subtask subtask1 = new Subtask("Постирать одежду", "Не забыть повесить на вешалку", TaskStatus.NEW, 3);
+        Subtask subtask2 = new Subtask("Помыть пол", "Желательно сделать до обеда", TaskStatus.NEW, 3);
 
-        Epic epic2 = new Epic("Эпик2", "-Эпик2-", TaskStatus.NEW);
-        Subtask subtask3 = new Subtask("Подзадача", "-Подзадача-", TaskStatus.NEW, epic2);
+        Epic epic2 = new Epic("Эпик2", "-Эпик2-");
+        Subtask subtask3 = new Subtask("Подзадача", "-Подзадача-", TaskStatus.NEW, 6);
 
         taskManager.addEpic(epic1);
         taskManager.addSubtask(subtask1);
@@ -28,24 +28,24 @@ public class Main {
 
         for (Task task : taskManager.getTasks()) {
             System.out.println("> Задача №" + task.getId());
-            System.out.println("  Название: " + task.name);
-            System.out.println("  Описание: " + task.description);
-            System.out.println("  Статус: " + task.taskStatus.toString());
+            System.out.println("  Название: " + task.getName());
+            System.out.println("  Описание: " + task.getDescription());
+            System.out.println("  Статус: " + task.getTaskStatus().toString());
         }
 
         System.out.println(" ---------- ");
 
         for (Epic epic : taskManager.getEpics()) {
             System.out.println("> Эпик №" + epic.getId());
-            System.out.println("  Название: " + epic.name);
-            System.out.println("  Описание: " + epic.description);
-            System.out.println("  Статус: " + epic.taskStatus.toString());
+            System.out.println("  Название: " + epic.getName());
+            System.out.println("  Описание: " + epic.getDescription());
+            System.out.println("  Статус: " + epic.getTaskStatus().toString());
 
             for (Subtask subtask : epic.getTasks()) {
                 System.out.println("  > Подзадача №" + subtask.getId());
-                System.out.println("    Название: " + subtask.name);
-                System.out.println("    Описание: " + subtask.description);
-                System.out.println("    Статус: " + subtask.taskStatus.toString());
+                System.out.println("    Название: " + subtask.getName());
+                System.out.println("    Описание: " + subtask.getDescription());
+                System.out.println("    Статус: " + subtask.getTaskStatus().toString());
             }
         }
 
@@ -53,39 +53,39 @@ public class Main {
         System.out.println(" -- После изменений -- ");
         System.out.println("\n\n");
 
-        task1.taskStatus = TaskStatus.DONE;
+        task1.setTaskStatus(TaskStatus.DONE);
         taskManager.updateTask(task1);
-        task2.taskStatus = TaskStatus.IN_PROGRESS;
+        task2.setTaskStatus(TaskStatus.IN_PROGRESS);
         taskManager.updateTask(task2);
 
-        subtask1.taskStatus = TaskStatus.IN_PROGRESS;
+        subtask1.setTaskStatus(TaskStatus.IN_PROGRESS);
         taskManager.updateSubtask(subtask1);
-        subtask2.taskStatus = TaskStatus.DONE;
+        subtask2.setTaskStatus(TaskStatus.DONE);
         taskManager.updateSubtask(subtask2);
 
-        subtask3.taskStatus = TaskStatus.DONE;
+        subtask3.setTaskStatus(TaskStatus.DONE);
         taskManager.updateSubtask(subtask3);
 
         for (Task task : taskManager.getTasks()) {
             System.out.println("> Задача №" + task.getId());
-            System.out.println("  Название: " + task.name);
-            System.out.println("  Описание: " + task.description);
-            System.out.println("  Статус: " + task.taskStatus.toString());
+            System.out.println("  Название: " + task.getName());
+            System.out.println("  Описание: " + task.getDescription());
+            System.out.println("  Статус: " + task.getTaskStatus().toString());
         }
 
         System.out.println(" ---------- ");
 
         for (Epic epic : taskManager.getEpics()) {
             System.out.println("> Эпик №" + epic.getId());
-            System.out.println("  Название: " + epic.name);
-            System.out.println("  Описание: " + epic.description);
-            System.out.println("  Статус: " + epic.taskStatus.toString());
+            System.out.println("  Название: " + epic.getName());
+            System.out.println("  Описание: " + epic.getDescription());
+            System.out.println("  Статус: " + epic.getTaskStatus().toString());
 
             for (Subtask subtask : epic.getTasks()) {
                 System.out.println("  > Подзадача №" + subtask.getId());
-                System.out.println("    Название: " + subtask.name);
-                System.out.println("    Описание: " + subtask.description);
-                System.out.println("    Статус: " + subtask.taskStatus.toString());
+                System.out.println("    Название: " + subtask.getName());
+                System.out.println("    Описание: " + subtask.getDescription());
+                System.out.println("    Статус: " + subtask.getTaskStatus().toString());
             }
         }
 
@@ -99,24 +99,24 @@ public class Main {
 
         for (Task task : taskManager.getTasks()) {
             System.out.println("> Задача №" + task.getId());
-            System.out.println("  Название: " + task.name);
-            System.out.println("  Описание: " + task.description);
-            System.out.println("  Статус: " + task.taskStatus.toString());
+            System.out.println("  Название: " + task.getName());
+            System.out.println("  Описание: " + task.getDescription());
+            System.out.println("  Статус: " + task.getTaskStatus().toString());
         }
 
         System.out.println(" ---------- ");
 
         for (Epic epic : taskManager.getEpics()) {
             System.out.println("> Эпик №" + epic.getId());
-            System.out.println("  Название: " + epic.name);
-            System.out.println("  Описание: " + epic.description);
-            System.out.println("  Статус: " + epic.taskStatus.toString());
+            System.out.println("  Название: " + epic.getName());
+            System.out.println("  Описание: " + epic.getDescription());
+            System.out.println("  Статус: " + epic.getTaskStatus().toString());
 
             for (Subtask subtask : epic.getTasks()) {
                 System.out.println("  > Подзадача №" + subtask.getId());
-                System.out.println("    Название: " + subtask.name);
-                System.out.println("    Описание: " + subtask.description);
-                System.out.println("    Статус: " + subtask.taskStatus.toString());
+                System.out.println("    Название: " + subtask.getName());
+                System.out.println("    Описание: " + subtask.getDescription());
+                System.out.println("    Статус: " + subtask.getTaskStatus().toString());
             }
         }
     }

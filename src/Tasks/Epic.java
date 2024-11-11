@@ -3,18 +3,14 @@ package Tasks;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private int latestSubtaskId = 1;
-    public ArrayList<Subtask> tasks =  new ArrayList<>();
+    private ArrayList<Subtask> tasks;
 
-    public Epic(String name, String description, TaskStatus taskStatus) {
-        super(name, description, taskStatus);
+    public Epic(String name, String description) {
+        super(name, description, TaskStatus.NEW);
+        tasks = new ArrayList<>();
     }
 
     public void addTask(Subtask subtask) {
-        subtask.setId(latestSubtaskId++);
-        subtask.setEpic(this);
-        if (subtask.taskStatus == null) subtask.taskStatus  = TaskStatus.NEW;
-
         tasks.add(subtask);
     }
 
@@ -33,7 +29,6 @@ public class Epic extends Task {
 
     public void clearTasks() {
         tasks.clear();
-        latestSubtaskId = 1;
     }
 
     public void verifyStatus() {
@@ -41,20 +36,29 @@ public class Epic extends Task {
         boolean allDone = true;
 
         for (Subtask subtask : tasks) {
-            if (subtask.taskStatus != TaskStatus.DONE) {
+            if (subtask.getTaskStatus() != TaskStatus.DONE) {
                 allDone = false;
             }
-            if (subtask.taskStatus != TaskStatus.NEW) {
+            if (subtask.getTaskStatus() != TaskStatus.NEW) {
                 allNew = false;
             }
         }
 
-        if (allDone) {
-            this.taskStatus = TaskStatus.DONE;
-        } else if (allNew) {
-            this.taskStatus = TaskStatus.NEW;
+        if (allNew) {
+            this.setTaskStatus(TaskStatus.NEW);
+        } else if (allDone) {
+            this.setTaskStatus(TaskStatus.DONE);
         } else {
-            this.taskStatus = TaskStatus.IN_PROGRESS;
+            this.setTaskStatus(TaskStatus.IN_PROGRESS);
+        }
+    }
+
+    public void deleteTask(int id) {
+        for (Subtask subtask : tasks) {
+            if (subtask.getId() == id) {
+                tasks.remove(subtask);
+                break;
+            }
         }
     }
 }
