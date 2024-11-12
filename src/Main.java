@@ -95,7 +95,7 @@ public class Main {
 
         taskManager.deleteTask(1);
         taskManager.deleteEpic(6);
-        taskManager.deleteSubtask(epic1, 1);
+        taskManager.deleteSubtask(4);
 
         for (Task task : taskManager.getTasks()) {
             System.out.println("> Задача №" + task.getId());
