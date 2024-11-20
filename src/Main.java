@@ -1,3 +1,7 @@
+import Managers.InMemoryHistoryManager;
+import Managers.InMemoryTaskManager;
+import Managers.TaskManager;
+import Managers.Managers;
 import Tasks.Epic;
 import Tasks.Subtask;
 import Tasks.Task;
@@ -5,7 +9,8 @@ import Tasks.TaskStatus;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Managers.getDefault();
+
         Task task1 = new Task("Задача1", "Сделать яичницу", TaskStatus.NEW);
         Task task2 = new Task("Задача2", "Вынести мусор", TaskStatus.NEW);
 
