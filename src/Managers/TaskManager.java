@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
-    ArrayList<Task> getTasks();
-    ArrayList<Epic> getEpics();
-    ArrayList<Subtask> getSubtasks();
+    List<Task> getTasks();
+    List<Epic> getEpics();
+    List<Subtask> getSubtasks();
 
     void deleteTasks();
     void deleteEpics();
@@ -32,7 +32,7 @@ public interface TaskManager {
     void deleteEpic(int id);
     void deleteSubtask(int id);
 
-    ArrayList<Subtask> getEpicSubtasks(int id);
+    List<Subtask> getEpicSubtasks(int id);
 
     List<Task> getHistory();
 }
