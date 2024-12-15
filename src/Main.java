@@ -1,9 +1,9 @@
-import Managers.TaskManager;
-import Managers.Managers;
-import Tasks.Epic;
-import Tasks.Subtask;
-import Tasks.Task;
-import Tasks.TaskStatus;
+import managers.TaskManager;
+import managers.Managers;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+import tasks.TaskStatus;
 
 public class Main {
     public static void oldTest(TaskManager taskManager) {
