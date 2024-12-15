@@ -29,19 +29,18 @@ public class TasksLinkedList<T> {
 
         if (prev == null) {
             head = next;
-        } else {
-            prev.next = next;
-            node.prev = null;
+            if (head != null) {
+                head.prev = null;
+            }
         }
 
         if (next == null) {
             tail = prev;
-        } else {
-            next.prev = prev;
-            node.next = null;
+            if (tail != null) {
+                tail.next = null;
+            }
         }
 
-        node.data = null;
         size--;
     }
 
