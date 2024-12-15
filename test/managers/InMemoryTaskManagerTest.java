@@ -1,7 +1,9 @@
-package Managers;
+package managers;
 
-import Tasks.Task;
-import Tasks.TaskStatus;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+import tasks.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
@@ -47,5 +49,24 @@ public class InMemoryTaskManagerTest {
         final List<Task> tasks = taskManager.getTasks();
 
         Assertions.assertEquals(0, tasks.size(), "Задача не удалена.");
+    }
+
+    @Test
+    public void epicShouldNotHaveNonExistingSubtasks() {
+        Epic epic1 = new Epic("Эпик1", "Эпик1 описание");
+        taskManager.addEpic(epic1);
+
+        Subtask subtask1 = new Subtask("Подзадача1", "Подзадача1 описание", TaskStatus.NEW, epic1.getId());
+        Subtask subtask2 = new Subtask("Подзадача2", "Подзадача2 описание", TaskStatus.NEW, epic1.getId());
+
+        epic1.addTask(subtask1);
+        epic1.addTask(subtask2);
+
+        // Удаление подзадач
+        epic1.deleteTask(subtask1.getId());
+        epic1.deleteTask(subtask2.getId());
+
+        Assertions.assertEquals(0, epic1.getTasks().size(), "Подзадачи не удалены.");
+        Assertions.assertEquals(0, taskManager.getSubtasks().size(), "Подзадачи не удалены.");
     }
 }
