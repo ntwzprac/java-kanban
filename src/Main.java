@@ -1,5 +1,3 @@
-import Managers.InMemoryHistoryManager;
-import Managers.InMemoryTaskManager;
 import Managers.TaskManager;
 import Managers.Managers;
 import Tasks.Epic;
@@ -8,9 +6,7 @@ import Tasks.Task;
 import Tasks.TaskStatus;
 
 public class Main {
-    public static void oldTest() {
-        TaskManager taskManager = Managers.getDefault();
-
+    public static void oldTest(TaskManager taskManager) {
         Task task1 = new Task("Задача1", "Сделать яичницу", TaskStatus.NEW);
         Task task2 = new Task("Задача2", "Вынести мусор", TaskStatus.NEW);
 
@@ -125,8 +121,10 @@ public class Main {
             }
         }
     }
-    public static void newTest() {
+
+    public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
+//        oldTest(taskManager);
 
         Task task1 = new Task("Задача1", "Описание задачи1", TaskStatus.NEW);
         Task task2 = new Task("Задача2", "Описание задачи2", TaskStatus.NEW);
@@ -202,10 +200,5 @@ public class Main {
         for (Task task : taskManager.getHistory()) {
             System.out.println(task.getName());
         }
-    }
-
-    public static void main(String[] args) {
-//        oldTest();
-        newTest();
     }
 }
