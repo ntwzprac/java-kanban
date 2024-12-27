@@ -1,5 +1,7 @@
 package managers;
 
+import util.ManagerSaveException;
+
 import java.io.IOException;
 
 public class Managers {
@@ -12,12 +14,7 @@ public class Managers {
     }
 
     public static FileBackedTaskManager loadFromFile(String path) {
-        FileBackedTaskManager taskManager = new FileBackedTaskManager();
-        try {
-            taskManager.loadFromFile(path);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        FileBackedTaskManager taskManager = new FileBackedTaskManager(path);
         return taskManager;
     }
 }

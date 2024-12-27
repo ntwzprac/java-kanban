@@ -230,14 +230,14 @@ public class Main {
 
         System.out.println("\nСписок задач:\n");
         for (Task task : taskManager.getTasks()) {
-            System.out.println(task.getName());
+            System.out.println(task.getId() + " - " + task.getName());
         }
 
         System.out.println("\nСписок эпиков:\n");
         for (Epic epic : taskManager.getEpics()) {
-            System.out.println(epic.getName());
+            System.out.println(epic.getId() + " - " + epic.getName());
             for (Subtask subtask : epic.getTasks()) {
-                System.out.println("  " + subtask.getName());
+                System.out.println("  " + subtask.getId() + " - " + subtask.getName());
             }
         }
 //        oldTest(taskManager);

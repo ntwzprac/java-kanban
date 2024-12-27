@@ -4,6 +4,7 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
+import util.ManagerSaveException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,19 +16,50 @@ import java.util.List;
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private String savePath;
 
-    public FileBackedTaskManager() {
+    public FileBackedTaskManager(String savePath) {
         super();
+
+        this.savePath = savePath;
+        try {
+            List<String> lines = stringFromFile(savePath);
+            if (!lines.isEmpty()) {
+                List<Subtask> importedSubtasks = new ArrayList<>();
+                List<Task> importedTasks = new ArrayList<>();
+                int highestId = 0;
+
+                for (int i = 1; i < lines.size(); i++) {
+                    Task task = fromString(lines.get(i));
+                    if (task instanceof Epic) {
+                        importEpic((Epic) task);
+                    } else if (task instanceof Subtask) {
+                        importedSubtasks.add((Subtask) task);
+                    } else {
+                        importedTasks.add(task);
+                    }
+                    if (task.getId() > highestId) {
+                        highestId = task.getId();
+                    }
+                }
+                for (Subtask subtask : importedSubtasks) {
+                    importSubtask(subtask);
+                }
+                for (Task task : importedTasks) {
+                    importTask(task);
+                }
+                latestId = highestId;
+            }
+        } catch (IOException e) {
+            throw new ManagerSaveException("Ошибка загрузки файла: " + e.getMessage());
+        }
     }
 
-    public void useSavePath(String path) {
-        savePath = path;
-    }
-
-    public void save() {
+    private void save() {
         List<Task> allTasks = getTasks();
         allTasks.addAll(getEpics());
         allTasks.addAll(getSubtasks());
+
         StringBuilder sb = new StringBuilder();
+        sb.append("id,type,name,status,description,epic\n");
         for (Task task : allTasks) {
             sb.append(task.toString());
             sb.append("\n");
@@ -36,11 +68,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try {
             Files.writeString(Path.of(savePath), sb.toString());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerSaveException("Ошибка сохранения файла: " + e.getMessage());
         }
     }
 
-    public Task fromString(String value) {
+    private Task fromString(String value) {
         String[] parts = value.split(",");
         int id = Integer.parseInt(parts[0]);
         String type = parts[1];
@@ -61,6 +93,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case "EPIC":
                 task = new Epic(name, description);
                 task.setId(id);
+                task.setTaskStatus(TaskStatus.valueOf(status));
                 break;
             case "SUBTASK":
                 task = new Subtask(name, description, TaskStatus.valueOf(status), epicId);
@@ -71,7 +104,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return task;
     }
 
-    public List<String> stringFromFile(String pathString) throws IOException {
+    private List<String> stringFromFile(String pathString) throws IOException {
         List<String> lines = new ArrayList<>();
         Path path = Paths.get(pathString);
         if (Files.exists(path)) {
@@ -81,42 +114,36 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return lines;
     }
 
-    public void loadFromFile(String path) throws IOException {
-        List<String> lines = stringFromFile(path);
-        List<Epic> importedEpics = new ArrayList<>();
+    public static FileBackedTaskManager loadFromFile(String path) throws IOException {
+        FileBackedTaskManager manager = new FileBackedTaskManager(path);
+        List<String> lines = manager.stringFromFile(path);
         List<Subtask> importedSubtasks = new ArrayList<>();
         List<Task> importedTasks = new ArrayList<>();
-//        for (int i = 1; i < lines.size(); i++) {
-//            Task task = fromString(lines.get(i));
-//            if (task instanceof Epic) {
-//                addEpic((Epic) task);
-//            } else if (task instanceof Subtask) {
-//                addSubtask((Subtask) task);
-//            } else {
-//                addTask(task);
-//            }
-//        }
-        for (int i = 0; i < lines.size(); i++) {
-            Task task = fromString(lines.get(i));
+        int highestId = 0;
+
+        for (int i = 1; i < lines.size(); i++) {
+            Task task = manager.fromString(lines.get(i));
             if (task instanceof Epic) {
-                importedEpics.add((Epic) task);
+                manager.importEpic((Epic) task);
             } else if (task instanceof Subtask) {
                 importedSubtasks.add((Subtask) task);
             } else {
                 importedTasks.add(task);
             }
-        }
-        for (Epic epic : importedEpics) {
-            importEpic(epic);
+            if (task.getId() > highestId) {
+                highestId = task.getId();
+            }
         }
         for (Subtask subtask : importedSubtasks) {
-            importSubtask(subtask);
+            manager.importSubtask(subtask);
         }
         for (Task task : importedTasks) {
-            importTask(task);
+            manager.importTask(task);
         }
-        savePath = path;
-        save();
+
+
+        manager.latestId = highestId;
+        return manager;
     }
 
     @Override
@@ -156,30 +183,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public void importTask(Task task) {
-//        super.addTask(task);
-
-        if (task.getTaskStatus() == null) task.setTaskStatus(TaskStatus.NEW);
-
         getTasksMap().put(task.getId(), task);
     }
 
     public void importEpic(Epic epic) {
-//        super.addEpic(epic);
-
-        if (epic.getTaskStatus() == null) epic.setTaskStatus(TaskStatus.NEW);
-
         getEpicsMap().put(epic.getId(), epic);
     }
 
     public void importSubtask(Subtask subtask) {
-//        super.addSubtask(subtask);
         if (!getEpicsMap().containsKey(subtask.getEpicId())) {
             System.out.println("Эпик не найден");
             return;
         }
         getSubtasksMap().put(subtask.getId(), subtask);
         getEpicsMap().get(subtask.getEpicId()).addTask(subtask);
-        getEpicsMap().get(subtask.getEpicId()).verifyStatus();
     }
 
     @Override
