@@ -20,37 +20,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super();
 
         this.savePath = savePath;
-        try {
-            List<String> lines = stringFromFile(savePath);
-            if (!lines.isEmpty()) {
-                List<Subtask> importedSubtasks = new ArrayList<>();
-                List<Task> importedTasks = new ArrayList<>();
-                int highestId = 0;
-
-                for (int i = 1; i < lines.size(); i++) {
-                    Task task = fromString(lines.get(i));
-                    if (task instanceof Epic) {
-                        importEpic((Epic) task);
-                    } else if (task instanceof Subtask) {
-                        importedSubtasks.add((Subtask) task);
-                    } else {
-                        importedTasks.add(task);
-                    }
-                    if (task.getId() > highestId) {
-                        highestId = task.getId();
-                    }
-                }
-                for (Subtask subtask : importedSubtasks) {
-                    importSubtask(subtask);
-                }
-                for (Task task : importedTasks) {
-                    importTask(task);
-                }
-                latestId = highestId;
-            }
-        } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка загрузки файла: " + e.getMessage());
-        }
     }
 
     private void save() {
@@ -117,8 +86,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static FileBackedTaskManager loadFromFile(String path) throws IOException {
         FileBackedTaskManager manager = new FileBackedTaskManager(path);
         List<String> lines = manager.stringFromFile(path);
-        List<Subtask> importedSubtasks = new ArrayList<>();
-        List<Task> importedTasks = new ArrayList<>();
         int highestId = 0;
 
         for (int i = 1; i < lines.size(); i++) {
@@ -126,19 +93,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             if (task instanceof Epic) {
                 manager.importEpic((Epic) task);
             } else if (task instanceof Subtask) {
-                importedSubtasks.add((Subtask) task);
+                manager.importSubtask((Subtask) task);
             } else {
-                importedTasks.add(task);
+                manager.importTask(task);
             }
             if (task.getId() > highestId) {
                 highestId = task.getId();
             }
-        }
-        for (Subtask subtask : importedSubtasks) {
-            manager.importSubtask(subtask);
-        }
-        for (Task task : importedTasks) {
-            manager.importTask(task);
         }
 
 
