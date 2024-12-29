@@ -44,6 +44,10 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
+    public String toString() {
+        return String.format("%d,%s,%s,%s,%s,%s", getId(), "TASK", getName(), getTaskStatus().toDetailedString(), getDescription(), "");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

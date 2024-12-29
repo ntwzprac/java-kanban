@@ -122,10 +122,7 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
-        TaskManager taskManager = Managers.getDefault();
-//        oldTest(taskManager);
-
+    public static void oldTest2(TaskManager taskManager) {
         Task task1 = new Task("Задача1", "Описание задачи1", TaskStatus.NEW);
         Task task2 = new Task("Задача2", "Описание задачи2", TaskStatus.NEW);
 
@@ -200,5 +197,49 @@ public class Main {
         for (Task task : taskManager.getHistory()) {
             System.out.println(task.getName());
         }
+    }
+
+    public static void main(String[] args) {
+//        TaskManager taskManager = Managers.getDefault();
+//        oldTest(taskManager);
+//        oldTest2(taskManager);
+
+        TaskManager taskManager = Managers.loadFromFile("./save.csv");
+
+        /* Раскоментировать, если необходимо восстановить данные для теста ( к примеру, если файл save.csv был очищен )
+        Task task1 = new Task("Задача1", "Описание задачи1", TaskStatus.NEW);
+        Task task2 = new Task("Задача2", "Описание задачи2", TaskStatus.NEW);
+
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+
+        Epic epic1 = new Epic("Эпик1", "Описание эпика1");
+        taskManager.addEpic(epic1);
+
+        Subtask subtask1 = new Subtask("Подзадача1", "Описание подзадачи1", TaskStatus.NEW, epic1.getId());
+        Subtask subtask2 = new Subtask("Подзадача2", "Описание подзадачи2", TaskStatus.NEW, epic1.getId());
+        Subtask subtask3 = new Subtask("Подзадача3", "Описание подзадачи3", TaskStatus.NEW, epic1.getId());
+
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+        taskManager.addSubtask(subtask3);
+
+        Epic epic2 = new Epic("Эпик2", "Описание эпика2");
+        taskManager.addEpic(epic2);
+         */
+
+        System.out.println("\nСписок задач:\n");
+        for (Task task : taskManager.getTasks()) {
+            System.out.println(task.getId() + " - " + task.getName());
+        }
+
+        System.out.println("\nСписок эпиков:\n");
+        for (Epic epic : taskManager.getEpics()) {
+            System.out.println(epic.getId() + " - " + epic.getName());
+            for (Subtask subtask : epic.getTasks()) {
+                System.out.println("  " + subtask.getId() + " - " + subtask.getName());
+            }
+        }
+//        oldTest(taskManager);
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int latestId = 1;
+    protected int latestId = 1;
     private Map<Integer, Task> tasks;
     private Map<Integer, Epic> epics;
     private Map<Integer, Subtask> subtasks;
@@ -29,9 +29,7 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<Task> getTasks() {
         ArrayList<Task> allTasks = new ArrayList<>();
 
-        for (Task task : tasks.values()) {
-            allTasks.add(task);
-        }
+        allTasks.addAll(tasks.values());
 
         return allTasks;
     }
@@ -40,9 +38,7 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<Epic> getEpics() {
         ArrayList<Epic> allEpics = new ArrayList<>();
 
-        for (Epic epic : epics.values()) {
-            allEpics.add(epic);
-        }
+        allEpics.addAll(epics.values());
 
         return allEpics;
     }
@@ -51,9 +47,7 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<Subtask> getSubtasks() {
         ArrayList<Subtask> allSubtasks = new ArrayList<>();
 
-        for (Subtask subtask : subtasks.values()) {
-            allSubtasks.add(subtask);
-        }
+        allSubtasks.addAll(subtasks.values());
 
         return allSubtasks;
     }
@@ -236,5 +230,17 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    protected Map<Integer, Task> getTasksMap() {
+        return tasks;
+    }
+
+    protected Map<Integer, Epic> getEpicsMap() {
+        return epics;
+    }
+
+    protected Map<Integer, Subtask> getSubtasksMap() {
+        return subtasks;
     }
 }

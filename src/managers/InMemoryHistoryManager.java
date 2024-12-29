@@ -1,6 +1,8 @@
 package managers;
 
 import tasks.Task;
+import util.Node;
+import util.TasksLinkedList;
 
 import java.util.LinkedHashMap;
 import java.util.List;
