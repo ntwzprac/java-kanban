@@ -5,6 +5,9 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Main {
     public static void oldTest(TaskManager taskManager) {
         Task task1 = new Task("Задача1", "Сделать яичницу", TaskStatus.NEW);
@@ -206,31 +209,33 @@ public class Main {
 
         TaskManager taskManager = Managers.loadFromFile("./save.csv");
 
-        /* Раскоментировать, если необходимо восстановить данные для теста ( к примеру, если файл save.csv был очищен )
-        Task task1 = new Task("Задача1", "Описание задачи1", TaskStatus.NEW);
-        Task task2 = new Task("Задача2", "Описание задачи2", TaskStatus.NEW);
-
-        taskManager.addTask(task1);
-        taskManager.addTask(task2);
-
-        Epic epic1 = new Epic("Эпик1", "Описание эпика1");
-        taskManager.addEpic(epic1);
-
-        Subtask subtask1 = new Subtask("Подзадача1", "Описание подзадачи1", TaskStatus.NEW, epic1.getId());
-        Subtask subtask2 = new Subtask("Подзадача2", "Описание подзадачи2", TaskStatus.NEW, epic1.getId());
-        Subtask subtask3 = new Subtask("Подзадача3", "Описание подзадачи3", TaskStatus.NEW, epic1.getId());
-
-        taskManager.addSubtask(subtask1);
-        taskManager.addSubtask(subtask2);
-        taskManager.addSubtask(subtask3);
-
-        Epic epic2 = new Epic("Эпик2", "Описание эпика2");
-        taskManager.addEpic(epic2);
-         */
+        // Раскомментировать, если необходимо восстановить данные для теста (к примеру, если файл save.csv был очищен)
+//        Task task1 = new Task("Задача1", "Описание задачи1", TaskStatus.NEW);
+//        task1.setStartTime(LocalDateTime.now().plusMinutes(10));
+//        task1.setDuration(Duration.ofMinutes(5));
+//
+//        taskManager.addTask(task1);
+//
+//        Epic epic1 = new Epic("Эпик1", "Описание эпика1");
+//        epic1.setStartTime(LocalDateTime.now().plusMinutes(15));
+//
+//        taskManager.addEpic(epic1);
+//
+//        Subtask subtask1 = new Subtask("Подзадача1", "Описание подзадачи1", TaskStatus.NEW, epic1.getId());
+//        subtask1.setStartTime(LocalDateTime.now().plusMinutes(15));
+//        subtask1.setDuration(Duration.ofMinutes(2));
+//
+//        Subtask subtask2 = new Subtask("Подзадача2", "Описание подзадачи2", TaskStatus.NEW, epic1.getId());
+//        subtask2.setStartTime(LocalDateTime.now().plusMinutes(20));
+//        subtask2.setDuration(Duration.ofMinutes(5));
+//
+//        taskManager.addSubtask(subtask1);
+//        taskManager.addSubtask(subtask2);
 
         System.out.println("\nСписок задач:\n");
         for (Task task : taskManager.getTasks()) {
             System.out.println(task.getId() + " - " + task.getName());
+            System.out.println("  Время начала: " + task.getStartTime() + " - Длительность: " + task.getDuration() + " - Время окончания: " + task.getEndTime());
         }
 
         System.out.println("\nСписок эпиков:\n");
@@ -238,8 +243,18 @@ public class Main {
             System.out.println(epic.getId() + " - " + epic.getName());
             for (Subtask subtask : epic.getTasks()) {
                 System.out.println("  " + subtask.getId() + " - " + subtask.getName());
+                System.out.println("    Время начала: " + subtask.getStartTime() + " - Длительность: " + subtask.getDuration() + " - Время окончания: " + subtask.getEndTime());
             }
+            System.out.println();
+            System.out.println("  Время начала: " + epic.getStartTime() + " - Длительность: " + epic.getDuration() + " - Время окончания: " + epic.getEndTime());
         }
+
+        System.out.println("\nПриоритезированный список задач:\n");
+        for (Task task : taskManager.getPrioritizedTasks()) {
+            System.out.println(task.getId() + " - " + task.getName());
+            System.out.println("  Время начала: " + task.getStartTime() + " - Длительность: " + task.getDuration() + " - Время окончания: " + task.getEndTime());
+        }
+
 //        oldTest(taskManager);
     }
 }
