@@ -5,9 +5,6 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-
 public class Main {
     public static void oldTest(TaskManager taskManager) {
         Task task1 = new Task("Задача1", "Сделать яичницу", TaskStatus.NEW);
