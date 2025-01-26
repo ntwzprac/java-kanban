@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
     private ArrayList<Subtask> tasks;
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description, TaskStatus.NEW);
@@ -54,10 +55,17 @@ public class Epic extends Task {
             this.setTaskStatus(TaskStatus.IN_PROGRESS);
         }
 
-        updateDuration();
+        updateAttributes();
     }
 
-    public void updateDuration() {
+    public void updateAttributes() {
+        LocalDateTime startTime = null;
+        for (Subtask subtask : tasks) {
+            if (startTime == null || subtask.getStartTime().isBefore(startTime)) {
+                startTime = subtask.getStartTime();
+            }
+        }
+
         Duration duration = Duration.ZERO;
         for (Subtask subtask : tasks) {
             if (subtask.getDuration() != null)
@@ -67,23 +75,19 @@ public class Epic extends Task {
         if (!tasks.isEmpty())
             this.setStartTime(tasks.getFirst().getStartTime());
 
-        this.setDuration(duration);
-    }
+        if (duration != Duration.ZERO)
+            this.setDuration(duration);
+        else
+            this.setDuration(null);
 
-    @Override
-    public LocalDateTime getStartTime() {
-        if (tasks.isEmpty()) {
-            return null;
-        }
-        return tasks.getFirst().getStartTime();
-    }
+        LocalDateTime endTime = null;
+        for (Subtask subtask : tasks) {
+            if (subtask.getStartTime() == null || subtask.getEndTime() == null) continue;
 
-    @Override
-    public LocalDateTime getEndTime() {
-        if (tasks.isEmpty()) {
-            return null;
+            if (endTime == null || subtask.getEndTime().isAfter(endTime)) {
+                if (subtask.getEndTime() != null) endTime = subtask.getEndTime();
+            }
         }
-        return tasks.getLast().getEndTime();
     }
 
     public void deleteTask(int id) {
