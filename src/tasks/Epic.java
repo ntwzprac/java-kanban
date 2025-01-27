@@ -58,36 +58,42 @@ public class Epic extends Task {
         updateAttributes();
     }
 
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
     public void updateAttributes() {
-        LocalDateTime startTime = null;
+        Duration totalDuration = Duration.ZERO;
+        LocalDateTime actualEndTime = null;
+
         for (Subtask subtask : tasks) {
-            if (startTime == null || subtask.getStartTime().isBefore(startTime)) {
-                startTime = subtask.getStartTime();
+            if (this.getStartTime() == null
+                    || (subtask.getStartTime() != null
+                    && subtask.getStartTime().isBefore(this.getStartTime()))) {
+                this.setStartTime(subtask.getStartTime());
             }
-        }
 
-        Duration duration = Duration.ZERO;
-        for (Subtask subtask : tasks) {
-            if (subtask.getDuration() != null)
-                duration = duration.plus(subtask.getDuration());
-        }
+            if (subtask.getDuration() != null) {
+                totalDuration = totalDuration.plus(subtask.getDuration());
+            }
 
-        if (!tasks.isEmpty())
-            this.setStartTime(tasks.getFirst().getStartTime());
-
-        if (duration != Duration.ZERO)
-            this.setDuration(duration);
-        else
-            this.setDuration(null);
-
-        LocalDateTime endTime = null;
-        for (Subtask subtask : tasks) {
             if (subtask.getStartTime() == null || subtask.getEndTime() == null) continue;
 
-            if (endTime == null || subtask.getEndTime().isAfter(endTime)) {
-                if (subtask.getEndTime() != null) endTime = subtask.getEndTime();
+            if (actualEndTime == null || subtask.getEndTime().isAfter(actualEndTime)) {
+                if (subtask.getEndTime() != null) actualEndTime = subtask.getEndTime();
             }
         }
+
+        if (totalDuration != Duration.ZERO)
+            this.setDuration(totalDuration);
+
+        if (actualEndTime != null)
+            this.setEndTime(actualEndTime);
     }
 
     public void deleteTask(int id) {
