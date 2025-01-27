@@ -1,6 +1,7 @@
 package tasks;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -69,13 +70,14 @@ public class Epic extends Task {
 
     public void updateAttributes() {
         Duration totalDuration = Duration.ZERO;
+        LocalDateTime actualStartTime = null;
         LocalDateTime actualEndTime = null;
 
         for (Subtask subtask : tasks) {
-            if (this.getStartTime() == null
-                    || (subtask.getStartTime() != null
-                    && subtask.getStartTime().isBefore(this.getStartTime()))) {
-                this.setStartTime(subtask.getStartTime());
+            if (subtask.getStartTime() != null) {
+                if (actualStartTime == null || subtask.getStartTime().isBefore(actualStartTime)) {
+                    actualStartTime = subtask.getStartTime();
+                }
             }
 
             if (subtask.getDuration() != null) {
@@ -85,9 +87,12 @@ public class Epic extends Task {
             if (subtask.getStartTime() == null || subtask.getEndTime() == null) continue;
 
             if (actualEndTime == null || subtask.getEndTime().isAfter(actualEndTime)) {
-                if (subtask.getEndTime() != null) actualEndTime = subtask.getEndTime();
+                actualEndTime = subtask.getEndTime();
             }
         }
+
+        if (actualStartTime != null)
+            this.setStartTime(actualStartTime);
 
         if (totalDuration != Duration.ZERO)
             this.setDuration(totalDuration);

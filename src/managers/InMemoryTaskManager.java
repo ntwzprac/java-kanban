@@ -207,9 +207,9 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         tasks.put(task.getId(), task);
+        prioritizedTasks.removeIf(t -> t.getId() == task.getId());
 
         if (task.getStartTime() != null && task.getDuration() != null) {
-            prioritizedTasks.removeIf(t -> t.getId() == task.getId());
             prioritizedTasks.add(task);
         }
     }
@@ -245,8 +245,9 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.verifyStatus();
             }
 
+            prioritizedTasks.removeIf(t -> t.getId() == subtask.getId());
+
             if (subtask.getStartTime() != null && subtask.getDuration() != null) {
-                prioritizedTasks.removeIf(t -> t.getId() == subtask.getId());
                 prioritizedTasks.add(subtask);
             }
         }
