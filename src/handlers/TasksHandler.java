@@ -1,9 +1,5 @@
 package handlers;
 
-import adapters.DurationAdapter;
-import adapters.LocalDateTimeAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -15,9 +11,6 @@ import tasks.TaskStatus;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 public class TasksHandler extends BaseHttpHandler implements HttpHandler {
