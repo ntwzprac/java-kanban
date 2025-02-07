@@ -1,7 +1,5 @@
 package tasks;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 
