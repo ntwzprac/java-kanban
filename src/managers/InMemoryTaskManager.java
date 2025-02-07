@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    protected int latestId = 1;
+    protected int latestId = 0;
     private Map<Integer, Task> tasks;
     private Map<Integer, Epic> epics;
     private Map<Integer, Subtask> subtasks;
@@ -161,7 +161,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
 
-        task.setId(latestId++);
+        task.setId(++latestId);
         tasks.put(task.getId(), task);
         prioritizedTasks.add(task);
     }
@@ -170,7 +170,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void addEpic(Epic epic) {
         if (epic.getTaskStatus() == null) epic.setTaskStatus(TaskStatus.NEW);
 
-        epic.setId(latestId++);
+        epic.setId(++latestId);
         epics.put(epic.getId(), epic);
     }
 
@@ -189,7 +189,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
 
-        subtask.setId(latestId++);
+        subtask.setId(++latestId);
         subtasks.put(subtask.getId(), subtask);
         prioritizedTasks.add(subtask);
         epics.get(subtask.getEpicId()).addTask(subtask);

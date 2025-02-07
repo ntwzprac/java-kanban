@@ -1,5 +1,6 @@
 import managers.TaskManager;
 import managers.Managers;
+import server.HttpTaskServer;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -229,6 +230,9 @@ public class Main {
 //        taskManager.addSubtask(subtask1);
 //        taskManager.addSubtask(subtask2);
 
+        HttpTaskServer server = new HttpTaskServer(taskManager);
+        server.start();
+
         System.out.println("\nСписок задач:\n");
         for (Task task : taskManager.getTasks()) {
             System.out.println(task.getId() + " - " + task.getName());
@@ -251,6 +255,11 @@ public class Main {
             System.out.println(task.getId() + " - " + task.getName());
             System.out.println("  Время начала: " + task.getStartTime() + " - Длительность: " + task.getDuration() + " - Время окончания: " + task.getEndTime());
         }
+
+        // для заполнения истории
+        Task task = taskManager.getTask(0);
+        Epic epic = taskManager.getEpic(1);
+        task = taskManager.getTask(0);
 
 //        oldTest(taskManager);
     }
