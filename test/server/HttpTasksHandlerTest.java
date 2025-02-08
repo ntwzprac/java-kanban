@@ -70,7 +70,7 @@ public class HttpTasksHandlerTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(201, response.statusCode());
+        assertEquals(200, response.statusCode());
 
         // проверяем, что создалась одна задача с корректным именем
         List<Task> tasksFromManager = manager.getTasks();

@@ -73,7 +73,7 @@ public class HttpSubtasksHandlerTest {
         // вызываем рест, отвечающий за создание подзадач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(201, response.statusCode());
+        assertEquals(200, response.statusCode());
 
         // проверяем, что создалась одна подзадача с корректным именем
         List<Subtask> subtasksFromManager = manager.getSubtasks();

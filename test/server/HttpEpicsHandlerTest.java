@@ -69,7 +69,7 @@ public class HttpEpicsHandlerTest {
         // вызываем рест, отвечающий за создание эпиков
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(201, response.statusCode());
+        assertEquals(200, response.statusCode());
 
         // проверяем, что создался один эпик с корректным именем
         List<Epic> epicsFromManager = manager.getEpics();
@@ -77,6 +77,38 @@ public class HttpEpicsHandlerTest {
         assertNotNull(epicsFromManager, "Эпики не возвращаются");
         assertEquals(1, epicsFromManager.size(), "Некорректное количество эпиков");
         assertEquals("Test Epic", epicsFromManager.get(0).getName(), "Некорректное имя эпика");
+    }
+
+    @Test
+    public void testUpdateEpic() throws IOException, InterruptedException {
+        // создаём эпик
+        Epic epic = new Epic("Test Epic", "Testing epic");
+
+        // добавляем эпик в менеджер
+        manager.addEpic(epic);
+
+        // меняем имя эпика
+        epic.setName("Updated Epic");
+
+        // конвертируем его в JSON
+        String epicJson = gson.toJson(epic);
+
+        // создаём HTTP-клиент и запрос
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/epics");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(HttpRequest.BodyPublishers.ofString(epicJson)).build();
+
+        // вызываем рест, отвечающий за обновление эпиков
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        // проверяем код ответа
+        assertEquals(201, response.statusCode());
+
+        // проверяем, что обновился один эпик с корректным именем
+        List<Epic> epicsFromManager = manager.getEpics();
+
+        assertNotNull(epicsFromManager, "Эпики не возвращаются");
+        assertEquals(1, epicsFromManager.size(), "Некорректное количество эпиков");
+        assertEquals("Updated Epic", epicsFromManager.get(0).getName(), "Некорректное имя эпика");
     }
 
     @Test

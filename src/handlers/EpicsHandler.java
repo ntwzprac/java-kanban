@@ -89,8 +89,13 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
             epic.setTaskStatus(TaskStatus.NEW);
         }
 
-        taskManager.addEpic(epic);
-        sendCreated(httpExchange);
+        if (taskManager.getEpic(epic.getId()) != null) {
+            taskManager.updateEpic(epic);
+            sendCreated(httpExchange);
+        } else {
+            taskManager.addEpic(epic);
+            sendText(httpExchange, gson.toJson(epic));
+        }
     }
 
     private void removeEpic(HttpExchange httpExchange) throws IOException {

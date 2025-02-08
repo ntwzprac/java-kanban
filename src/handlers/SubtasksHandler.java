@@ -81,10 +81,11 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
 
         if (taskManager.getSubtask(subtask.getId()) != null) {
             taskManager.updateSubtask(subtask);
+            sendCreated(httpExchange);
         } else {
             taskManager.addSubtask(subtask);
+            sendText(httpExchange, gson.toJson(subtask));
         }
-        sendCreated(httpExchange);
     }
 
     private void removeSubtask(HttpExchange httpExchange) throws IOException {

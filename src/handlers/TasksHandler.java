@@ -81,10 +81,11 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
 
         if (task.getId() != 0) {
             taskManager.updateTask(task);
+            sendCreated(httpExchange);
         } else {
             taskManager.addTask(task);
+            sendText(httpExchange, gson.toJson(task));
         }
-        sendCreated(httpExchange);
     }
 
     private void removeTask(HttpExchange httpExchange) throws IOException {
